@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% block title %}Search Medication{% endblock %}
+<!-- -->
+{% block content %}
+<div>
+  <h1>Search Medication</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <div>
+      <label for="medication_name">Medication Name:</label>
+      <input type="text" id="medication_name" name="medication_name" value="{{ medication_name_query }}" />
+    </div>
+    <div>
+      <label for="phone">Administration Notes:</label>
+      <input type="text" id="administration_notes" name="administration_notes" value="{{ administration_notes_query }}" />
+    </div>
+    <div>
+      <label for="test">Usage Time:</label>
+      <input type="text" id="usage_time" name="usage_time" value="{{ usage_time_query }}" />
+    </div>
+    <div>
+      <label for="usage_importance">Usage Importance:</label>
+      <input type="text" id="usage_importance" name="usage_importance" value="{{ usage_importance_query }}" />
+    </div>
+    <button type="submit">Search Medication</button>
+  </form>
+
+  <!-- Search Results -->
+  {% if contacts %}
+  <div>
+    <h2>Search Results</h2>
+    <p>Query: {{ medication_name_query }} {{ administration_notes_query }} {{ usage_time_query }} {{ usage_importance_query }}</p>
+    <ul>
+      {% for contact in contacts %}
+      <li>
+        <div>
+          <span>#{{ contact.id }}</span>
+          <span>{{ contact.medication_name }}</span>
+          <span>{{ contact.administration_notes }}</span>
+	  <span>{{ contact.usage_time }}</span>
+          <span>{{ contact.usage_importance }}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Pagination Controls -->
+    <nav>
+      <ul>
+        {% if contacts.has_previous %}
+        <li>
+          <a href="?page=1&medication_name={{ medication_name_query }}&administration_notes={{ administration_notes_query }}&usage_time={{ usage_time_query }}&usage_importance={{ usage_importance_query }}"
+            >First</a
+          >
+        </li>
+        <li>
+          <a
+            href="?page={{ contacts.previous_page_number }}& medication_name={{ medication_name_query }}& administration_notes={{ administration_notes_query }}& usage_time={{ usage_time_query }}& usage_importance={{ usage_importance_query }}"
+            >Previous</a
+          >
+        </li>
+        {% endif %}
+        <li>
+          <span>
+            Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}
+          </span>
+        </li>
+        {% if contacts.has_next %}
+        <li>
+          <a
+            href="?page={{ contacts.next_page_number }}&medication_name={{ medication_name_query }}&administration_notes={{ administration_notes_query }}&usage_time={{ usage_time_query }}&usage_importance={{ usage_importance_query }}"
+            >Next</a
+          >
+        </li>
+        <li>
+          <a
+            href="?page={{ contacts.paginator.num_pages }}&medication_name={{ medication_name_query }}&administration_notes={{ administration_notes_query }}&usage_time={{ usage_time_query }}&usage_importance={{ usage_importance_query }}"
+            >Last</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+  {% elif request.method == "POST" and not contacts %}
+  <!-- No Results Message -->
+  <div>No medications found. Please try again.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Add Medication{% endblock %}
+{% block content %}
+<h1>Add a New Medication</h1>
+<!-- Contact Form -->
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Add Medication</button>
+</form>
+<!-- Success Message -->
+{% if success %}
+<p><strong>Success!</strong> The medication has been successfully added.</p>
+<!-- Display Added Contact -->
+<h3>Medication Added</h3>
+<p>
+  <strong>Medication Name:</strong> {{ added_contact.medication_name }} <br />
+  <strong>Administration Notes:</strong> {{ added_contact.administration_notes }} <br />
+  <strong>Usage Time:</strong> {{ added_contact.usage_time }} <br />
+  <strong>Usage Importance:</strong> {{ added_contact.usage_importance }}
+</p>
+{% endif %}
+{% endblock %}
